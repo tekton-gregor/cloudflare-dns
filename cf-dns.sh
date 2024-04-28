@@ -9,7 +9,6 @@
 #   See the README for more examples
 
 
-
 # # # # # # # # # # # # # # # # # # # #
 # START-UP CHECKS
 #
@@ -21,23 +20,25 @@
     fi
 
 # Exit with error if the Cloudflare credentials file doesn't exist
-    if [ ! -f ./auth.json ]; then
-        printf "\nERROR: * * * The file containing your Cloudflare credentials '%s' doesn't exist. * * *\n" $(pwd)/auth.json
+    if [ ! -f "${CF_AUTH_JSON}" ]; then
+        printf "\nERROR: * * * The file containing your Cloudflare credentials '%s' doesn't exist. * * *\n"
         exit 1
     fi
 
 # Unset all variables
     unset ANSWER APIKEY AUTO COMMENT CONTENT DELETE DNS_ID DOMAIN HEADER_EMAIL HEADER_KEY HEADER_TOKEN EMAIL KEY MODE NAME PAYLOAD OVERRIDE PRIORITY PROXIED RECORD REQUEST_HEADER REQUEST_URL RESPONSE TMPFILE TOKEN TTL TYPE ZONE_ID 
 
-
+# use CF_AUTH_JSON to hold the path to what was auth.json
+[[ -z ${CF_AUTH_JSON} ]] && { echo "Please define CF_AUTH_JSON"; exit 1; }
+[[ -f ${CF_AUTH_JSON} ]] || { echo "Please create ${CF_AUTH_JSON}"; exit 1; }
 
 # # # # # # # # # # # # # # # # # # # #
 # CONSTANTS
 #
 
-EMAIL=$(cat ./auth.json | python3 -c "import sys, json; print(json.load(sys.stdin)['cloudflare']['email'])")
-KEY=$(cat ./auth.json | python3 -c "import sys, json; print(json.load(sys.stdin)['cloudflare']['key'])")
-TOKEN=$(cat ./auth.json | python3 -c "import sys, json; print(json.load(sys.stdin)['cloudflare']['token'])")
+EMAIL=$(cat "${CF_AUTH_JSON}" | python3 -c "import sys, json; print(json.load(sys.stdin)['cloudflare']['email'])")
+KEY=$(cat "${CF_AUTH_JSON}" | python3 -c "import sys, json; print(json.load(sys.stdin)['cloudflare']['key'])")
+TOKEN=$(cat "${CF_AUTH_JSON}" | python3 -c "import sys, json; print(json.load(sys.stdin)['cloudflare']['token'])")
 
 
 
